@@ -1,49 +1,68 @@
 const productContainer = document.getElementById("products");
+const search = document.getElementById("search");
+const category = document.getElementById("category");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function updateCartCount() {
-document.getElementById("cart-count").textContent = cart.length;
+  document.getElementById("cart-count").textContent = cart.length;
 }
 
 function addToCart(product) {
-cart.push(product);
-localStorage.setItem("cart", JSON.stringify(cart));
-updateCartCount();
-alert(product.name + " added to cart");
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert(product.name + " added to cart");
 }
 
-function displayProducts() {
+function displayProducts(productList) {
+  productContainer.innerHTML = "";
 
-productContainer.innerHTML = "";
+  productList.forEach(product => {
+    const card = document.createElement("div");
 
-products.forEach(product => {
+    card.className = "card";
 
-const card = document.createElement("div");
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
 
-card.className = "card";
+      <div class="card-body">
+        <h3>${product.name}</h3>
 
-card.innerHTML = `
-<img src="${product.image}" alt="${product.name}">
+        <p>${product.category}</p>
 
-<div class="card-body">
+        <p class="price">₹${product.price}</p>
 
-<h3>${product.name}</h3>
+        <button>Add to Cart</button>
+      </div>
+    `;
 
-<p class="price">₹${product.price}</p>
+    card.querySelector("button").addEventListener("click", () => {
+      addToCart(product);
+    });
 
-<button>Add to Cart</button>
-
-</div>
-`;
-
-card.querySelector("button").addEventListener("click", () => addToCart(product));
-
-productContainer.appendChild(card);
-
-});
-
+    productContainer.appendChild(card);
+  });
 }
 
-displayProducts();
+function filterProducts() {
+  const searchText = search.value.toLowerCase();
+  const selectedCategory = category.value;
+
+  const filtered = products.filter(product => {
+    const matchName = product.name.toLowerCase().includes(searchText);
+    const matchCategory =
+      selectedCategory === "all" ||
+      product.category === selectedCategory;
+
+    return matchName && matchCategory;
+  });
+
+  displayProducts(filtered);
+}
+
+search.addEventListener("input", filterProducts);
+category.addEventListener("change", filterProducts);
+
+displayProducts(products);
 updateCartCount();
