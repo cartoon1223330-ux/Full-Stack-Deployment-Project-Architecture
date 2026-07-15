@@ -174,4 +174,21 @@ nav{
     font-size:18px;
 }
 
+} .controls{
+display:flex;
+justify-content:center;
+gap:20px;
+padding:30px;
+flex-wrap:wrap;
+}
+
+.controls input,
+.controls select{
+
+padding:12px;
+width:280px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:16px;
+
 }
